@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Doctor - AI-Powered Medicine Assistant</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-tab {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .nav-tab:hover, .nav-tab.active {
+            background: rgba(255,255,255,0.9);
+            color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            min-height: 500px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            transition: transform 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: #667eea;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .symptom-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .symptom-tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .symptom-tag:hover, .symptom-tag.selected {
+            background: #1976d2;
+            color: white;
+            border-color: #1976d2;
+        }
+
+        .medicine-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .medicine-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .medicine-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .medicine-details {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .confidence-score {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .confidence-score.medium {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .confidence-score.low {
+            background: #dc3545;
+        }
+
+        .upload-area {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        .upload-area:hover {
+            background: #e3f2fd;
+            border-color: #1976d2;
+        }
+
+        .upload-area.dragover {
+            background: #e3f2fd;
+            border-color: #1976d2;
+            transform: scale(1.02);
+        }
+
+        .chat-container {
+            height: 400px;
+            border: 2px solid #e1e5e9;
+            border-radius: 15px;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+            margin-bottom: 20px;
+        }
+
+        .chat-message {
+            margin-bottom: 15px;
+            padding: 12px 18px;
+            border-radius: 20px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .chat-message.user {
+            background: #667eea;
+            color: white;
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .chat-message.bot {
+            background: white;
+            color: #333;
+            border: 1px solid #e1e5e9;
+        }
+
+        .warning {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .search-results {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e1e5e9;
+            border-radius: 10px;
+            background: white;
+        }
+
+        .search-result {
+            padding: 15px;
+            border-bottom: 1px solid #e1e5e9;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .search-result:hover {
+            background: #f8f9fa;
+        }
+
+        .search-result:last-child {
+            border-bottom: none;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-tab {
+                width: 200px;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-user-md"></i> Virtual Doctor</h1>
+            <p>AI-Powered Medicine Assistant & Tablet Recognition</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="showTab('home')">
+                <i class="fas fa-home"></i> Home
+            </button>
+            <button class="nav-tab" onclick="showTab('symptoms')">
+                <i class="fas fa-stethoscope"></i> Symptom Checker
+            </button>
+            <button class="nav-tab" onclick="showTab('tablet')">
+                <i class="fas fa-camera"></i> Tablet Recognition
+            </button>
+            <button class="nav-tab" onclick="showTab('medicines')">
+                <i class="fas fa-pills"></i> Medicine Database
+            </button>
+        </div>
+
+        <!-- Home Tab -->
+        <div id="home" class="tab-content active">
+            <h2>Welcome to Virtual Doctor</h2>
+            <p style="margin-bottom: 30px; color: #666;">
+                Your intelligent healthcare companion powered by AI. Get personalized medicine recommendations, 
+                identify tablets from images, and access comprehensive medical information.
+            </p>
+
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-stethoscope"></i>
+                    </div>
+                    <h3>Symptom Checker</h3>
+                    <p>Describe your symptoms and get AI-powered medicine recommendations based on your medical history and conditions.</p>
+                    <button class="btn" onclick="showTab('symptoms')">Try Now</button>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                    <h3>Tablet Recognition</h3>
+                    <p>Upload a photo of any tablet and our AI will identify the medicine and provide detailed information.</p>
+                    <button class="btn" onclick="showTab('tablet')">Try Now</button>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3>Medicine Database</h3>
+                    <p>Browse our comprehensive database of medicines with detailed information from FDA sources.</p>
+                    <button class="btn" onclick="showTab('medicines')">Browse</button>
+                </div>
+            </div>
+
+            <div class="warning">
+                <strong><i class="fas fa-exclamation-triangle"></i> Important Disclaimer:</strong>
+                This application is for educational purposes only. Always consult with healthcare professionals for medical advice and treatment.
+            </div>
+        </div>
+
+        <!-- Symptom Checker Tab -->
+        <div id="symptoms" class="tab-content">
+            <h2><i class="fas fa-stethoscope"></i> Symptom Checker</h2>
+            <p style="margin-bottom: 30px; color: #666;">
+                Select your symptoms and get personalized medicine recommendations.
+            </p>
+
+            <div class="form-group">
+                <label>Select Symptoms:</label>
+                <div class="symptom-tags">
+                    <span class="symptom-tag" onclick="toggleSymptom(this)">Fever</span>
+                    <span class="symptom-tag" onclick="toggleSymptom(this)">Headache</span>
+                    <span class="symptom-tag" onclick="toggleSymptom(this)">Cough</span>
+                    <span class="symptom-tag" onclick="toggleSymptom(this)">Body Pain</span>
+                    <span class="symptom-tag" onclick="toggleSymptom(this)">Sore Throat</span>
+                    <span class="symptom-tag" onclick="toggleSymptom(this)">Nausea</span>
+                    <span class="symptom-tag" onclick="toggleSymptom(this)">Fatigue</span>
+                    <span class="symptom-tag" onclick="toggleSymptom(this)">Dizziness</span>
+                    <span class="symptom-tag" onclick="toggleSymptom(this)">Runny Nose</span>
+                    <span class="symptom-tag" onclick="toggleSymptom(this)">Insomnia</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Medical Conditions (if any):</label>
+                <div class="symptom-tags">
+                    <span class="symptom-tag" onclick="toggleCondition(this)">Diabetes</span>
+                    <span class="symptom-tag" onclick="toggleCondition(this)">High Blood Pressure</span>
+                    <span class="symptom-tag" onclick="toggleCondition(this)">Pregnancy</span>
+                    <span class="symptom-tag" onclick="toggleCondition(this)">Heart Disease</span>
+                    <span class="symptom-tag" onclick="toggleCondition(this)">Liver Disease</span>
+                    <span class="symptom-tag" onclick="toggleCondition(this)">Kidney Disease</span>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                <div class="form-group" style="flex: 1;">
+                    <label>Age:</label>
+                    <input type="number" class="form-control" id="age" placeholder="Enter your age">
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Gender:</label>
+                    <select class="form-control" id="gender">
+                        <option value="">Select Gender</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn" onclick="getRecommendations()">
+                <i class="fas fa-search"></i> Get Recommendations
+            </button>
+            <button class="btn btn-secondary" onclick="clearSymptoms()">
+                <i class="fas fa-trash"></i> Clear All
+            </button>
+
+            <div id="recommendations" class="hidden">
+                <h3 style="margin-top: 30px;">Recommendations</h3>
+                <div id="recommendationsList"></div>
+            </div>
+        </div>
+
+        <!-- Tablet Recognition Tab -->
+        <div id="tablet" class="tab-content">
+            <h2><i class="fas fa-camera"></i> Tablet Recognition</h2>
+            <p style="margin-bottom: 30px; color: #666;">
+                Upload a photo of any tablet to identify the medicine.
+            </p>
+
+            <div class="upload-area" id="uploadArea" onclick="document.getElementById('imageInput').click()">
+                <i class="fas fa-cloud-upload-alt" style="font-size: 3rem; color: #667eea; margin-bottom: 15px;"></i>
+                <h3>Upload Tablet Image</h3>
+                <p>Click to select an image or drag and drop it here</p>
+                <p style="color: #666; font-size: 0.9rem;">Supported formats: JPG, PNG, GIF</p>
+            </div>
+
+            <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageUpload(event)">
+
+            <div id="imagePreview" class="hidden" style="text-align: center; margin-bottom: 20px;">
+                <img id="previewImg" style="max-width: 300px; max-height: 300px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+                <br><br>
+                <button class="btn" onclick="identifyTablet()">
+                    <i class="fas fa-search"></i> Identify Tablet
+                </button>
+                <button class="btn btn-secondary" onclick="clearImage()">
+                    <i class="fas fa-trash"></i> Clear Image
+                </button>
+            </div>
+
+            <div id="identificationResult" class="hidden">
+                <h3>Identification Results</h3>
+                <div id="resultContent"></div>
+            </div>
+        </div>
+
+        <!-- Medicine Database Tab -->
+        <div id="medicines" class="tab-content">
+            <h2><i class="fas fa-database"></i> Medicine Database</h2>
+            <p style="margin-bottom: 30px; color: #666;">
+                Search and browse our comprehensive medicine database.
+            </p>
+
+            <div class="form-group">
+                <label>Search Medicines:</label>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" class="form-control" id="medicineSearch" placeholder="Enter medicine name, ingredient, or manufacturer">
+                    <button class="btn" onclick="searchMedicines()">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+            </div>
+
+            <div id="searchResults" class="hidden">
+                <h3>Search Results</h3>
+                <div id="medicinesList"></div>
+            </div>
+
+            <div id="sampleMedicines">
+                <h3>Sample Medicines</h3>
+                <div id="sampleMedicinesList"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let selectedSymptoms = [];
+        let selectedConditions = [];
+        let uploadedImage = null;
+
+        // Sample medicine data
+        const sampleMedicines = [
+            {
+                name: "Tylenol",
+                generic: "Acetaminophen",
+                manufacturer: "Johnson & Johnson",
+                strength: "500mg",
+                usage: "Temporary relief of minor aches and pains due to headache, muscle aches, backache, minor pain of arthritis, toothache, menstrual cramps, and for the reduction of fever.",
+                warnings: "Do not take more than directed. If you are pregnant or nursing, ask a health professional before use."
+            },
+            {
+                name: "Advil",
+                generic: "Ibuprofen",
+                manufacturer: "Pfizer",
+                strength: "200mg",
+                usage: "Temporarily relieves minor aches and pains due to headache, toothache, backache, menstrual cramps, the common cold, or minor pain of arthritis.",
+                warnings: "Do not take if you have ever had an allergic reaction to any other pain reliever/fever reducer."
+            },
+            {
+                name: "Aspirin",
+                generic: "Acetylsalicylic Acid",
+                manufacturer: "Bayer",
+                strength: "325mg",
+                usage: "Temporarily relieves minor aches and pains due to headache, toothache, backache, menstrual cramps, the common cold, or minor pain of arthritis.",
+                warnings: "Reye's syndrome: Children and teenagers who have or are recovering from chicken pox or flu-like symptoms should not use this product."
+            },
+            {
+                name: "Benadryl",
+                generic: "Diphenhydramine",
+                manufacturer: "Johnson & Johnson",
+                strength: "25mg",
+                usage: "Temporarily relieves symptoms due to hay fever or other upper respiratory allergies.",
+                warnings: "May cause drowsiness. Alcohol, sedatives, and tranquilizers may increase the drowsiness effect."
+            }
+        ];
+
+        // Tab switching
+        function showTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all nav tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked nav tab
+            event.target.classList.add('active');
+            
+            // Load content for specific tabs
+            if (tabName === 'medicines') {
+                loadSampleMedicines();
+            }
+        }
+
+        // Symptom selection
+        function toggleSymptom(element) {
+            const symptom = element.textContent;
+            if (element.classList.contains('selected')) {
+                element.classList.remove('selected');
+                selectedSymptoms = selectedSymptoms.filter(s => s !== symptom);
+            } else {
+                element.classList.add('selected');
+                selectedSymptoms.push(symptom);
+            }
+        }
+
+        // Condition selection
+        function toggleCondition(element) {
+            const condition = element.textContent;
+            if (element.classList.contains('selected')) {
+                element.classList.remove('selected');
+                selectedConditions = selectedConditions.filter(c => c !== condition);
+            } else {
+                element.classList.add('selected');
+                selectedConditions.push(condition);
+            }
+        }
+
+        // Get recommendations
+        function getRecommendations() {
+            if (selectedSymptoms.length === 0) {
+                alert('Please select at least one symptom');
+                return;
+            }
+
+            // Simulate API call
+            showLoading('Getting recommendations...');
+            
+            setTimeout(() => {
+                const recommendations = generateRecommendations();
+                displayRecommendations(recommendations);
+                hideLoading();
+            }, 1500);
+        }
+
+        // Generate mock recommendations
+        function generateRecommendations() {
+            const recommendations = [];
+            
+            // Simple logic based on symptoms
+            if (selectedSymptoms.includes('Fever') || selectedSymptoms.includes('Headache')) {
+                recommendations.push({
+                    name: 'Tylenol',
+                    generic: 'Acetaminophen',
+                    effectiveness: 0.85,
+                    score: 0.9,
+                    warnings: selectedConditions.includes('Pregnancy') ? ['Use with caution during pregnancy'] : []
+                });
+            }
+            
+            if (selectedSymptoms.includes('Body Pain') || selectedSymptoms.includes('Headache')) {
+                recommendations.push({
+                    name: 'Advil',
+                    generic: 'Ibuprofen',
+                    effectiveness: 0.8,
+                    score: 0.85,
+                    warnings: selectedConditions.includes('Heart Disease') ? ['May increase risk of heart attack'] : []
+                });
+            }
+            
+            if (selectedSymptoms.includes('Cough') || selectedSymptoms.includes('Sore Throat')) {
+                recommendations.push({
+                    name: 'Benadryl',
+                    generic: 'Diphenhydramine',
+                    effectiveness: 0.7,
+                    score: 0.75,
+                    warnings: ['May cause drowsiness']
+                });
+            }
+            
+            return recommendations;
+        }
+
+        // Display recommendations
+        function displayRecommendations(recommendations) {
+            const container = document.getElementById('recommendations');
+            const list = document.getElementById('recommendationsList');
+            
+            if (recommendations.length === 0) {
+                list.innerHTML = '<p>No specific recommendations found. Please consult a healthcare professional.</p>';
+            } else {
+                list.innerHTML = recommendations.map(rec => `
+                    <div class="medicine-card">
+                        <div class="medicine-name">${rec.name}</div>
+                        <div class="medicine-details">
+                            <strong>Generic:</strong> ${rec.generic}<br>
+                            <strong>Effectiveness:</strong> ${Math.round(rec.effectiveness * 100)}%<br>
+                            <strong>Score:</strong> ${rec.score.toFixed(2)}
+                        </div>
+                        ${rec.warnings.length > 0 ? `
+                            <div class="warning" style="margin-top: 10px;">
+                                <strong>Warnings:</strong> ${rec.warnings.join(', ')}
+                            </div>
+                        ` : ''}
+                        <div class="confidence-score ${rec.effectiveness > 0.8 ? '' : rec.effectiveness > 0.6 ? 'medium' : 'low'}">
+                            ${rec.effectiveness > 0.8 ? 'High Confidence' : rec.effectiveness > 0.6 ? 'Medium Confidence' : 'Low Confidence'}
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            container.classList.remove('hidden');
+        }
+
+        // Clear symptoms
+        function clearSymptoms() {
+            selectedSymptoms = [];
+            selectedConditions = [];
+            document.querySelectorAll('.symptom-tag').forEach(tag => {
+                tag.classList.remove('selected');
+            });
+            document.getElementById('age').value = '';
+            document.getElementById('gender').value = '';
+            document.getElementById('recommendations').classList.add('hidden');
+        }
+
+        // Image upload handling
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('imagePreview').classList.remove('hidden');
+                    uploadedImage = file;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Identify tablet
+        function identifyTablet() {
+            if (!uploadedImage) {
+                alert('Please upload an image first');
+                return;
+            }
+
+            showLoading('Identifying tablet...');
+            
+            setTimeout(() => {
+                const result = generateTabletIdentification();
+                displayIdentificationResult(result);
+                hideLoading();
+            }, 2000);
+        }
+
+        // Generate mock tablet identification
+        function generateTabletIdentification() {
+            const medicines = ['Tylenol', 'Advil', 'Aspirin', 'Benadryl'];
+            const randomMedicine = medicines[Math.floor(Math.random() * medicines.length)];
+            const confidence = 0.7 + Math.random() * 0.3; // 70-100% confidence
+            
+            return {
+                medicine: randomMedicine,
+                confidence: confidence,
+                success: true
+            };
+        }
+
+        // Display identification result
+        function displayIdentificationResult(result) {
+            const container = document.getElementById('identificationResult');
+            const content = document.getElementById('resultContent');
+            
+            if (result.success) {
+                const medicine = sampleMedicines.find(m => m.name === result.medicine);
+                content.innerHTML = `
+                    <div class="medicine-card">
+                        <div class="medicine-name">${result.medicine}</div>
+                        <div class="medicine-details">
+                            <strong>Generic:</strong> ${medicine ? medicine.generic : 'Unknown'}<br>
+                            <strong>Manufacturer:</strong> ${medicine ? medicine.manufacturer : 'Unknown'}<br>
+                            <strong>Strength:</strong> ${medicine ? medicine.strength : 'Unknown'}
+                        </div>
+                        <div class="confidence-score ${result.confidence > 0.8 ? '' : result.confidence > 0.6 ? 'medium' : 'low'}">
+                            ${Math.round(result.confidence * 100)}% Confidence
+                        </div>
+                    </div>
+                `;
+            } else {
+                content.innerHTML = '<p>Unable to identify the tablet. Please try with a clearer image.</p>';
+            }
+            
+            container.classList.remove('hidden');
+        }
+
+        // Clear image
+        function clearImage() {
+            document.getElementById('imageInput').value = '';
+            document.getElementById('imagePreview').classList.add('hidden');
+            document.getElementById('identificationResult').classList.add('hidden');
+            uploadedImage = null;
+        }
+
+        // Search medicines
+        function searchMedicines() {
+            const query = document.getElementById('medicineSearch').value.toLowerCase();
+            if (!query.trim()) {
+                alert('Please enter a search term');
+                return;
+            }
+
+            const results = sampleMedicines.filter(medicine => 
+                medicine.name.toLowerCase().includes(query) ||
+                medicine.generic.toLowerCase().includes(query) ||
+                medicine.manufacturer.toLowerCase().includes(query)
+            );
+
+            displaySearchResults(results);
+        }
+
+        // Display search results
+        function displaySearchResults(results) {
+            const container = document.getElementById('searchResults');
+            const list = document.getElementById('medicinesList');
+            
+            if (results.length === 0) {
+                list.innerHTML = '<p>No medicines found matching your search.</p>';
+            } else {
+                list.innerHTML = results.map(medicine => `
+                    <div class="medicine-card">
+                        <div class="medicine-name">${medicine.name}</div>
+                        <div class="medicine-details">
+                            <strong>Generic:</strong> ${medicine.generic}<br>
+                            <strong>Manufacturer:</strong> ${medicine.manufacturer}<br>
+                            <strong>Strength:</strong> ${medicine.strength}<br>
+                            <strong>Usage:</strong> ${medicine.usage.substring(0, 150)}...
+                        </div>
+                        <div class="warning" style="margin-top: 10px;">
+                            <strong>Warnings:</strong> ${medicine.warnings}
+                        </div>
+                    </div>
+                `).join('');
+            }
+            
+            container.classList.remove('hidden');
+        }
+
+        // Load sample medicines
+        function loadSampleMedicines() {
+            const list = document.getElementById('sampleMedicinesList');
+            list.innerHTML = sampleMedicines.map(medicine => `
+                <div class="medicine-card">
+                    <div class="medicine-name">${medicine.name}</div>
+                    <div class="medicine-details">
+                        <strong>Generic:</strong> ${medicine.generic}<br>
+                        <strong>Manufacturer:</strong> ${medicine.manufacturer}<br>
+                        <strong>Strength:</strong> ${medicine.strength}<br>
+                        <strong>Usage:</strong> ${medicine.usage.substring(0, 150)}...
+                    </div>
+                    <div class="warning" style="margin-top: 10px;">
+                        <strong>Warnings:</strong> ${medicine.warnings}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Loading functions
+        function showLoading(message) {
+            const loadingDiv = document.createElement('div');
+            loadingDiv.id = 'loadingDiv';
+            loadingDiv.className = 'loading';
+            loadingDiv.innerHTML = `
+                <div class="spinner"></div>
+                <p>${message}</p>
+            `;
+            document.querySelector('.tab-content.active').appendChild(loadingDiv);
+        }
+
+        function hideLoading() {
+            const loadingDiv = document.getElementById('loadingDiv');
+            if (loadingDiv) {
+                loadingDiv.remove();
+            }
+        }
+
+        // Drag and drop functionality
+        const uploadArea = document.getElementById('uploadArea');
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('previewImg').src = e.target.result;
+                        document.getElementById('imagePreview').classList.remove('hidden');
+                        uploadedImage = file;
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    alert('Please select an image file');
+                }
+            }
+        });
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSampleMedicines();
+        });
+    </script>
+</body>
+</html>
